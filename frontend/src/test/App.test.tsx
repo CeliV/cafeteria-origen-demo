@@ -1,5 +1,6 @@
 
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "../App";
 import { obtenerProductos } from "../api/productos.api";
@@ -21,6 +22,12 @@ const productos = [
             precioPorGramo: 140,
             descripcion: "Café brasileño",
         },
+    },
+    {
+        id: 19,
+        nombre: "Muffin de chocolate",
+        precio: 3500,
+        tipo: "pasteleria" as const,
     },
 ];
 
@@ -51,7 +58,9 @@ describe("App", () => {
     it("ofrece confirmar el pedido, deshabilitado mientras el carrito está vacío", () => {
         render(<App />);
 
-        expect(screen.getByRole("button", { name: "Confirmar pedido" })).toBeDisabled();
+        expect(
+            screen.getByRole("button", { name: "Confirmar pedido" }),
+        ).toBeDisabled();
     });
 
     it("muestra el menú de productos", async () => {
@@ -63,5 +72,59 @@ describe("App", () => {
 
         expect(screen.getByText("Expreso Pocillo")).toBeInTheDocument();
         expect(screen.getByText("$5020")).toBeInTheDocument();
+    });
+
+    it("comparte el mismo carrito entre el selector de café y pastelería", async () => {
+        const user = userEvent.setup();
+
+        render(<App />);
+
+        // Esperamos que carguen los selectores.
+        await screen.findByRole("heading", { name: "Pastelería" });
+
+        // Seleccionamos un café.
+        await user.click(
+            screen.getByRole("button", { name: /expreso/i }),
+        );
+
+        await user.selectOptions(
+            screen.getByLabelText(/tamaño/i),
+            "Pocillo",
+        );
+
+        await user.selectOptions(
+            screen.getByLabelText(/origen/i),
+            "Brasil",
+        );
+
+        await user.click(
+            screen.getByRole("button", { name: /agregar al carrito/i }),
+        );
+
+        // Agregamos un producto de pastelería.
+        await user.click(
+            screen.getByRole("button", {
+                name: /agregar muffin de chocolate/i,
+            }),
+        );
+
+        // Comprobamos que ambos productos aparecen en el mismo carrito.
+        const carrito = screen.getByRole("region", { name: "Carrito" });
+
+        expect(
+            await within(carrito).findByText("Expreso Pocillo"),
+        ).toBeInTheDocument();
+
+        expect(
+            within(carrito).getByText("Muffin de chocolate"),
+        ).toBeInTheDocument();
+
+        expect(
+            within(carrito).getByText("Precio unitario: $5020"),
+        ).toBeInTheDocument();
+
+        expect(
+            within(carrito).getByText("Precio unitario: $3500"),
+        ).toBeInTheDocument();
     });
 });
