@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { crearPedido } from "../api/pedidos.api";
+import { mensajeDeError } from "../api/errores";
 import type { Pedido } from "../api/pedidos.schema";
 import { useCarrito } from "../carrito/CarritoContext";
 import { armarPedido } from "./armarPedido";
@@ -26,8 +27,7 @@ export function ConfirmarPedido({ mesa }: { mesa: number | null }) {
       setEnvio({ tipo: "confirmado", pedido });
     } catch (error) {
       // el carrito no se toca: la persona puede reintentar sin volver a cargarlo
-      const mensaje = error instanceof Error ? error.message : "No se pudo confirmar el pedido";
-      setEnvio({ tipo: "error", mensaje });
+      setEnvio({ tipo: "error", mensaje: mensajeDeError(error) });
     }
   }
 
