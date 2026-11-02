@@ -145,7 +145,7 @@ describe("ConfirmarPedido (integración con MSW)", () => {
     expect(await screen.findByText("Estado actual: confirmado")).toBeInTheDocument();
   });
 
-  it("conserva el carrito si el pedido falla", async () => {
+    it("conserva el carrito si el pedido falla", async () => {
     servidor.use(
       mswHttp.post("*/pedidos", () => HttpResponse.json({ error: "Producto 5 no encontrado" }, { status: 404 })),
     );
@@ -155,8 +155,70 @@ describe("ConfirmarPedido (integración con MSW)", () => {
     await usuario.click(screen.getByRole("button", { name: "Cargar expreso" }));
     await usuario.click(screen.getByRole("button", { name: "Confirmar pedido" }));
 
-    expect(await screen.findByRole("alert")).toBeInTheDocument();
+    expect(await screen.findByRole("alert")).toHaveTextContent("Producto 5 no encontrado");
     expect(screen.getByRole("listitem", { name: "Expreso Mediano Colombia" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Confirmar pedido" })).toBeEnabled();
+  });
+
+  it("muestra el error 500 de la API y deja reintentar sin perder el carrito", async () => {
+    let intentos = 0;
+    servidor.use(
+      mswHttp.post("*/pedidos", () => {
+        intentos += 1;
+        if (intentos === 1) {
+          return HttpResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+        }
+        return HttpResponse.json(
+          {
+            id: 15,
+            estado: "pendiente",
+            total: 7360,
+            items: [{ productoId: 5, cantidad: 1, precioUnitario: 7360, subtotal: 7360 }],
+          },
+          { status: 201 },
+        );
+      }),
+    );
+    responderSeguimiento(15);
+    const usuario = userEvent.setup();
+    prepararPantalla(4);
+
+    await usuario.click(screen.getByRole("button", { name: "Cargar expreso" }));
+    await usuario.click(screen.getByRole("button", { name: "Confirmar pedido" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Error interno del servidor");
+    expect(screen.getByRole("listitem", { name: "Expreso Mediano Colombia" })).toBeInTheDocument();
+
+    await usuario.click(screen.getByRole("button", { name: "Confirmar pedido" }));
+
+    expect(await screen.findByText("Pedido N° 15")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("avisa que no pudo conectar si la API está caída y conserva el carrito", async () => {
+    servidor.use(mswHttp.post("*/pedidos", () => HttpResponse.error()));
+    const usuario = userEvent.setup();
+    prepararPantalla(4);
+
+    await usuario.click(screen.getByRole("button", { name: "Cargar expreso" }));
+    await usuario.click(screen.getByRole("button", { name: "Confirmar pedido" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("No se pudo conectar con el servidor");
+    expect(screen.getByRole("listitem", { name: "Expreso Mediano Colombia" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Confirmar pedido" })).toBeEnabled();
+  });
+
+  it("avisa si la respuesta de la API no cumple el contrato y conserva el carrito", async () => {
+    servidor.use(mswHttp.post("*/pedidos", () => HttpResponse.json({ id: 16 }, { status: 201 })));
+    const usuario = userEvent.setup();
+    prepararPantalla(4);
+
+    await usuario.click(screen.getByRole("button", { name: "Cargar expreso" }));
+    await usuario.click(screen.getByRole("button", { name: "Confirmar pedido" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "La respuesta del servidor no tiene el formato esperado",
+    );
+    expect(screen.getByRole("listitem", { name: "Expreso Mediano Colombia" })).toBeInTheDocument();
   });
 });
