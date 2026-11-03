@@ -87,11 +87,11 @@ export function SelectorCafe() {
     }
 
     if (cargando) {
-        return <p>Cargando opciones de café...</p>;
+        return <p role="status">Cargando opciones de café...</p>;
     }
 
     if (error) {
-        return <p>No se pudieron cargar las opciones de café.</p>;
+        return <p role="alert">No se pudieron cargar las opciones de café.</p>;
     }
 
     return (
