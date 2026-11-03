@@ -61,7 +61,7 @@ export function Pasteleria() {
             {productos.length === 0 ? (
                 <p>No hay productos de pastelería disponibles.</p>
             ) : (
-                <ul>
+                <ul className="list-unstyled">
                     {productos.map((producto) => (
                         <li key={producto.id}>
                             <h3>{producto.nombre}</h3>
@@ -70,6 +70,7 @@ export function Pasteleria() {
 
                             <button
                                 type="button"
+                                className="btn btn-primary"
                                 onClick={() => agregarAlCarrito(producto)}
                                 aria-label={`Agregar ${producto.nombre} al carrito`}
                             >
