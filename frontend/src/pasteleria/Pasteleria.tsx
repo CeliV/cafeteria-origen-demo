@@ -47,11 +47,11 @@ export function Pasteleria() {
     }
 
     if (cargando) {
-        return <p>Cargando productos de pastelería...</p>;
+        return <p role="status">Cargando productos de pastelería...</p>;
     }
 
     if (error) {
-        return <p>No se pudieron cargar los productos de pastelería.</p>;
+        return <p role="alert">No se pudieron cargar los productos de pastelería.</p>;
     }
 
     return (
