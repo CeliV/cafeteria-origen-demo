@@ -47,11 +47,11 @@ export function Pasteleria() {
     }
 
     if (cargando) {
-        return <p>Cargando productos de pastelería...</p>;
+        return <p role="status">Cargando productos de pastelería...</p>;
     }
 
     if (error) {
-        return <p>No se pudieron cargar los productos de pastelería.</p>;
+        return <p role="alert">No se pudieron cargar los productos de pastelería.</p>;
     }
 
     return (
@@ -61,7 +61,7 @@ export function Pasteleria() {
             {productos.length === 0 ? (
                 <p>No hay productos de pastelería disponibles.</p>
             ) : (
-                <ul>
+                <ul className="list-unstyled">
                     {productos.map((producto) => (
                         <li key={producto.id}>
                             <h3>{producto.nombre}</h3>
@@ -70,6 +70,7 @@ export function Pasteleria() {
 
                             <button
                                 type="button"
+                                className="btn btn-primary"
                                 onClick={() => agregarAlCarrito(producto)}
                                 aria-label={`Agregar ${producto.nombre} al carrito`}
                             >

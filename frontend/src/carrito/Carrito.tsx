@@ -16,42 +16,47 @@ export function Carrito() {
         <section aria-labelledby="titulo-carrito">
             <h2 id="titulo-carrito">Carrito</h2>
 
-            <ul>
+            <ul className="list-unstyled">
                 {estado.items.map((item) => (
                     <li key={item.productoId} aria-label={item.nombre}>
                         <h3>{item.nombre}</h3>
                         <p>Cantidad: {item.cantidad}</p>
                         <p>Precio unitario: ${item.precioUnitario}</p>
 
-                        <button
-                            type="button"
-                            aria-label={`Sumar ${item.nombre}`}
-                            onClick={() =>
-                                dispatch({ tipo: "sumar", productoId: item.productoId })
-                            }
-                        >
-                            +
-                        </button>
+                        <div className="d-flex flex-wrap gap-2">
+                            <button
+                                type="button"
+                                className="btn btn-outline-secondary"
+                                aria-label={`Sumar ${item.nombre}`}
+                                onClick={() =>
+                                    dispatch({ tipo: "sumar", productoId: item.productoId })
+                                }
+                            >
+                                +
+                            </button>
 
-                        <button
-                            type="button"
-                            aria-label={`Restar ${item.nombre}`}
-                            onClick={() =>
-                                dispatch({ tipo: "restar", productoId: item.productoId })
-                            }
-                        >
-                            -
-                        </button>
+                            <button
+                                type="button"
+                                className="btn btn-outline-secondary"
+                                aria-label={`Restar ${item.nombre}`}
+                                onClick={() =>
+                                    dispatch({ tipo: "restar", productoId: item.productoId })
+                                }
+                            >
+                                -
+                            </button>
 
-                        <button
-                            type="button"
-                            aria-label={`Quitar ${item.nombre}`}
-                            onClick={() =>
-                                dispatch({ tipo: "quitar", productoId: item.productoId })
-                            }
-                        >
-                            Quitar
-                        </button>
+                            <button
+                                type="button"
+                                className="btn btn-outline-danger"
+                                aria-label={`Quitar ${item.nombre}`}
+                                onClick={() =>
+                                    dispatch({ tipo: "quitar", productoId: item.productoId })
+                                }
+                            >
+                                Quitar
+                            </button>
+                        </div>
                     </li>
                 ))}
             </ul>

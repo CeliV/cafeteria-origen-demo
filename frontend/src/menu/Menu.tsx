@@ -27,23 +27,27 @@ export function Menu() {
     }, []);
 
     if (cargando) {
-        return <p>Cargando productos...</p>;
+        return <p role="status">Cargando productos...</p>;
     }
 
     if (error) {
-        return (
-            <section>
-                <p>No se pudieron cargar los productos.</p>
-                <button type="button" onClick={() => void cargarProductos()}>
-                    Reintentar
-                </button>
-            </section>
+    return (
+        <section aria-label="Menú">
+            <p role="alert">No se pudieron cargar los productos.</p>
+            <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => void cargarProductos()}
+            >
+                Reintentar
+            </button>
+        </section>
         );
     }
 
     return (
-        <section>
-            <h2>Menú</h2>
+        <section aria-labelledby="titulo-menu">
+            <h2 id="titulo-menu">Menú</h2>
 
             {productos.map((producto) => (
                 <article key={producto.id}>

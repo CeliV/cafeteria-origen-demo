@@ -35,9 +35,14 @@ export function ConfirmarPedido({ mesa }: { mesa: number | null }) {
     <section aria-labelledby="titulo-confirmar">
       <h2 id="titulo-confirmar">Confirmar pedido</h2>
 
-      <button type="button" disabled={carritoVacio || enviando} onClick={confirmar}>
+    <button
+        type="button"
+        className="btn btn-primary"
+        disabled={carritoVacio || enviando}
+        onClick={confirmar}
+    >
         Confirmar pedido
-      </button>
+    </button>
 
       {envio.tipo === "error" && <p role="alert">{envio.mensaje}</p>}
 
