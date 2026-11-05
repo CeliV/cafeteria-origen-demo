@@ -63,15 +63,22 @@ describe("App", () => {
         ).toBeDisabled();
     });
 
-    it("muestra el menú de productos", async () => {
+    it("muestra el encabezado del menú sin listar productos", () => {
         render(<App />);
 
+        const menu = screen.getByRole("region", { name: "Menú" });
+
         expect(
-            await screen.findByRole("heading", { name: "Menú" }),
+            within(menu).getByRole("heading", { name: "Menú" }),
         ).toBeInTheDocument();
 
-        expect(screen.getByText("Expreso Pocillo")).toBeInTheDocument();
-        expect(screen.getByText("$5020")).toBeInTheDocument();
+        expect(
+            within(menu).queryByText("Expreso Pocillo"),
+        ).not.toBeInTheDocument();
+
+        expect(
+            within(menu).queryByText("$5020"),
+        ).not.toBeInTheDocument();
     });
 
     it("comparte el mismo carrito entre el selector de café y pastelería", async () => {
