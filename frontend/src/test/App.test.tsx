@@ -99,9 +99,8 @@ describe("App", () => {
             "Pocillo",
         );
 
-        await user.selectOptions(
-            screen.getByLabelText(/origen/i),
-            "Brasil",
+        await user.click(
+            screen.getByRole("button", { name: /brasil/i }),
         );
 
         await user.click(
