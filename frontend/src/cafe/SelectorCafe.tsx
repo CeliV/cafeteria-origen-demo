@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { obtenerProductos } from "../api/productos.api";
 import type { Producto } from "../api/productos.schema";
@@ -36,29 +35,23 @@ export function SelectorCafe() {
 
     const cafes = productos.filter(
         (producto): producto is Cafe =>
-            producto.tipo === "expreso" || producto.tipo === "filtrado"
+            producto.tipo === "expreso" || producto.tipo === "filtrado",
     );
 
     const cafesTipo = cafes.filter(
-        (producto) => producto.tipo === tipo
+        (producto) => producto.tipo === tipo,
     );
 
     const tamanios = [
-        ...new Set(cafesTipo.map((producto) => producto.tamanio))
+        ...new Set(cafesTipo.map((producto) => producto.tamanio)),
     ];
 
     const cafesTamanio = cafesTipo.filter(
-        (producto) => producto.tamanio === tamanio
+        (producto) => producto.tamanio === tamanio,
     );
 
-    const origenes = [
-        ...new Set(
-            cafesTamanio.map((producto) => producto.variedad.nombre)
-        )
-    ];
-
     const productoSeleccionado = cafesTamanio.find(
-        (producto) => producto.variedad.nombre === origen
+        (producto) => producto.variedad.nombre === origen,
     );
 
     function seleccionarTipo(nuevoTipo: TipoCafe) {
@@ -77,8 +70,8 @@ export function SelectorCafe() {
             producto: {
                 productoId: productoSeleccionado.id,
                 nombre: productoSeleccionado.nombre,
-                precioUnitario: productoSeleccionado.precio
-            }
+                precioUnitario: productoSeleccionado.precio,
+            },
         });
 
         setTipo(null);
@@ -91,7 +84,11 @@ export function SelectorCafe() {
     }
 
     if (error) {
-        return <p role="alert">No se pudieron cargar las opciones de café.</p>;
+        return (
+            <p role="alert">
+                No se pudieron cargar las opciones de café.
+            </p>
+        );
     }
 
     return (
@@ -146,31 +143,46 @@ export function SelectorCafe() {
 
             {tamanio !== "" && (
                 <div className="mb-3">
-                    <label htmlFor="origen-cafe" className="form-label">
-                        Origen
-                    </label>
+                    <h3 className="h5 mb-3">Elegí el origen de tu café</h3>
 
-                    <select
-                        id="origen-cafe"
-                        className="form-select"
-                        value={origen}
-                        onChange={(event) => setOrigen(event.target.value)}
-                    >
-                        <option value="">Seleccioná un origen</option>
+                    <div className="row row-cols-1 row-cols-md-3 g-3">
+                        {cafesTamanio.map((producto) => {
+                            const seleccionado =
+                                origen === producto.variedad.nombre;
 
-                        {origenes.map((opcion) => (
-                            <option key={opcion} value={opcion}>
-                                {opcion}
-                            </option>
-                        ))}
-                    </select>
+                            return (
+                                <div className="col" key={producto.id}>
+                                    <article className="card h-100">
+                                        <button
+                                            type="button"
+                                            className={`card-body text-start w-100 border-0 rounded ${
+                                                seleccionado
+                                                    ? "border border-primary border-3"
+                                                    : ""
+                                            }`}
+                                            aria-pressed={seleccionado}
+                                            onClick={() =>
+                                                setOrigen(producto.variedad.nombre)
+                                            }
+                                        >
+                                            <span className="d-block fw-bold fs-5 mb-2">
+                                                {producto.variedad.nombre}
+                                            </span>
+
+                                            <span className="d-block mb-2">
+                                                {producto.variedad.descripcion}
+                                            </span>
+
+                                            <span className="d-block fw-semibold">
+                                                Precio: ${producto.precio}
+                                            </span>
+                                        </button>
+                                    </article>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
-            )}
-
-            {productoSeleccionado && (
-                <p aria-live="polite">
-                    Precio: ${productoSeleccionado.precio}
-                </p>
             )}
 
             <button
