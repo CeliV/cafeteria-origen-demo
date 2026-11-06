@@ -88,7 +88,7 @@ describe("ConfirmarPedido (integración con MSW)", () => {
 
     expect(await screen.findByText("Pedido N° 12")).toBeInTheDocument();
     expect(screen.getByText("Estado: pendiente")).toBeInTheDocument();
-    expect(screen.getByText("Total: $14720")).toBeInTheDocument();
+    expect(screen.getByText("Total: $14.720")).toBeInTheDocument();
     expect(cuerpoRecibido).toEqual({ mesaId: 4, items: [{ productoId: 5, cantidad: 2 }] });
     expect(screen.getByText("Tu carrito está vacío")).toBeInTheDocument();
   });
