@@ -1,7 +1,8 @@
-
 import { useState } from "react";
 import type { Producto } from "../api/productos.schema";
 import { useCarrito } from "../carrito/CarritoContext";
+import { buscarCafePorOrigen } from "./buscarCafePorOrigen";
+import { formatearPrecio } from "../utils/formatearPrecio";
 
 type TipoCafe = "expreso" | "filtrado";
 
@@ -35,9 +36,7 @@ export function SelectorCafe({ productos }: SelectorCafeProps) {
         (producto) => producto.tamanio === tamanio,
     );
 
-    const productoSeleccionado = cafesTamanio.find(
-        (producto) => producto.variedad.nombre === origen,
-    );
+    const productoSeleccionado = buscarCafePorOrigen(cafesTamanio, origen);
 
     function seleccionarTipo(nuevoTipo: TipoCafe) {
         setTipo(nuevoTipo);
@@ -147,7 +146,7 @@ export function SelectorCafe({ productos }: SelectorCafeProps) {
                                             </span>
 
                                             <span className="d-block fw-semibold">
-                                                Precio: ${producto.precio}
+                                                Precio: {formatearPrecio(producto.precio)}
                                             </span>
                                         </button>
                                     </article>

@@ -1,6 +1,6 @@
-
 import type { Producto } from "../api/productos.schema";
 import { useCarrito } from "../carrito/CarritoContext";
+import { formatearPrecio } from "../utils/formatearPrecio";
 
 type ProductoPasteleria = Extract<Producto, { tipo: "pasteleria" }>;
 
@@ -39,7 +39,7 @@ export function Pasteleria({ productos }: PasteleriaProps) {
                         <li key={producto.id}>
                             <h3>{producto.nombre}</h3>
 
-                            <p>Precio: ${producto.precio}</p>
+                            <p>Precio: {formatearPrecio(producto.precio)}</p>
 
                             <button
                                 type="button"
