@@ -1,3 +1,4 @@
+
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -48,10 +49,10 @@ describe("App", () => {
         expect(screen.getByText("Mesa 5")).toBeInTheDocument();
     });
 
-    it("muestra pedido sin mesa si la URL no la trae", () => {
+    it("indica que el pedido se retira en la barra si la URL no trae mesa", () => {
         render(<App />);
 
-        expect(screen.getByText("Pedido sin mesa")).toBeInTheDocument();
+        expect(screen.getByText("retirar en la barra")).toBeInTheDocument();
     });
 
     it("ofrece confirmar el pedido, deshabilitado mientras el carrito está vacío", () => {
