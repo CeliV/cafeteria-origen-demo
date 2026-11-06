@@ -1,14 +1,10 @@
+
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { obtenerProductos } from "../api/productos.api";
+import { describe, expect, it } from "vitest";
 import { SelectorCafe } from "../cafe/SelectorCafe";
 import { CarritoProvider } from "../carrito/CarritoContext";
 import { Carrito } from "../carrito/Carrito";
-
-vi.mock("../api/productos.api", () => ({
-    obtenerProductos: vi.fn(),
-}));
 
 const productos = [
     {
@@ -81,18 +77,13 @@ const productos = [
 function renderSelector() {
     return render(
         <CarritoProvider>
-            <SelectorCafe />
+            <SelectorCafe productos={productos} />
             <Carrito />
         </CarritoProvider>,
     );
 }
 
 describe("SelectorCafe", () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-        vi.mocked(obtenerProductos).mockResolvedValue(productos);
-    });
-
     it("muestra las opciones de tipo de café", async () => {
         renderSelector();
 
