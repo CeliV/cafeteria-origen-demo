@@ -71,8 +71,8 @@ describe("Pasteleria", () => {
 
         await screen.findByText("Muffin de chocolate");
 
-        expect(screen.getByText("Precio: $3500")).toBeInTheDocument();
-        expect(screen.getByText("Precio: $4200")).toBeInTheDocument();
+        expect(screen.getByText("Precio: $3.500")).toBeInTheDocument();
+        expect(screen.getByText("Precio: $4.200")).toBeInTheDocument();
     });
 
     it("agrega el producto seleccionado al carrito con su precio", async () => {
@@ -88,7 +88,7 @@ describe("Pasteleria", () => {
         );
 
         expect(
-            await screen.findByText("Precio unitario: $3500"),
+            await screen.findByText("Precio unitario: $3.500"),
         ).toBeInTheDocument();
 
         expect(screen.getByText("Cantidad: 1")).toBeInTheDocument();
@@ -107,7 +107,7 @@ describe("Pasteleria", () => {
         );
 
         expect(
-            await screen.findByText("Precio unitario: $4200"),
+            await screen.findByText("Precio unitario: $4.200"),
         ).toBeInTheDocument();
 
         expect(screen.getByText("Cantidad: 1")).toBeInTheDocument();
