@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { obtenerProductos } from "../api/productos.api";
+
+import { useState } from "react";
 import type { Producto } from "../api/productos.schema";
 import { useCarrito } from "../carrito/CarritoContext";
 
@@ -7,31 +7,16 @@ type TipoCafe = "expreso" | "filtrado";
 
 type Cafe = Extract<Producto, { tipo: TipoCafe }>;
 
-export function SelectorCafe() {
-    const [productos, setProductos] = useState<Producto[]>([]);
+type SelectorCafeProps = {
+    productos: Producto[];
+};
+
+export function SelectorCafe({ productos }: SelectorCafeProps) {
     const [tipo, setTipo] = useState<TipoCafe | null>(null);
     const [tamanio, setTamanio] = useState("");
     const [origen, setOrigen] = useState("");
-    const [cargando, setCargando] = useState(true);
-    const [error, setError] = useState(false);
 
     const { dispatch } = useCarrito();
-
-    useEffect(() => {
-        async function cargarProductos() {
-            try {
-                const resultado = await obtenerProductos();
-                setProductos(resultado);
-                setError(false);
-            } catch {
-                setError(true);
-            } finally {
-                setCargando(false);
-            }
-        }
-
-        void cargarProductos();
-    }, []);
 
     const cafes = productos.filter(
         (producto): producto is Cafe =>
@@ -77,18 +62,6 @@ export function SelectorCafe() {
         setTipo(null);
         setTamanio("");
         setOrigen("");
-    }
-
-    if (cargando) {
-        return <p role="status">Cargando opciones de café...</p>;
-    }
-
-    if (error) {
-        return (
-            <p role="alert">
-                No se pudieron cargar las opciones de café.
-            </p>
-        );
     }
 
     return (
