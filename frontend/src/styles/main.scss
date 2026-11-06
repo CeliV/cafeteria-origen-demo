@@ -49,12 +49,14 @@ main > header {
     border-bottom: 4px solid $cafe-dorado;
     box-shadow: var(--origen-sombra);
 
-    h1 {
+    h1,
+    .h3 {
         color: $cafe-crema;
         letter-spacing: 0.02em;
     }
 
-    p {
+    p,
+    .text-muted {
         color: $cafe-dorado !important; // pisa .text-muted
         font-weight: 600;
         text-transform: uppercase;
@@ -107,23 +109,6 @@ main > section[aria-labelledby="titulo-menu"] {
     }
 }
 
-// El seguimiento va dentro de "Confirmar pedido": se dibuja como un bloque
-// simple y no como una tarjeta dentro de otra tarjeta
-section[aria-labelledby="titulo-seguimiento"] {
-    background: none;
-    border: 0;
-    box-shadow: none;
-    padding: 0;
-    margin: 1rem 0 0;
-
-    > h2 {
-        font-size: 1.05rem;
-        border-bottom: 0;
-        padding-bottom: 0;
-        margin-bottom: 0.5rem;
-    }
-}
-
 // Mensajes de carga y de error (role="status" / role="alert")
 main p[role="status"],
 main div[role="status"] {
@@ -135,6 +120,10 @@ main div[role="status"] {
     p {
         margin-bottom: 0.25rem;
     }
+}
+
+main div[role="status"] {
+    margin-top: 1rem;
 }
 
 main p[role="alert"] {
@@ -213,8 +202,15 @@ section ul.list-unstyled {
     }
 }
 
+// Carrito vacío
+section[aria-labelledby="titulo-carrito"] > h2 + p {
+    margin: 0;
+    text-align: center;
+    color: var(--bs-secondary-color);
+}
+
 // Subtotal general del carrito
-section[aria-labelledby="titulo-carrito"] > p:last-child {
+section[aria-labelledby="titulo-carrito"] > ul + p {
     margin: 1rem 0 0;
     padding-top: 0.75rem;
     border-top: 2px solid $cafe-dorado;
@@ -323,7 +319,8 @@ body {
     main > header {
         border-bottom-color: #e0a56a;
 
-        p {
+        p,
+        .text-muted {
             color: #e0a56a !important;
         }
     }
@@ -389,7 +386,7 @@ body {
         border-bottom-color: #4a3426;
     }
 
-    section[aria-labelledby="titulo-carrito"] > p:last-child {
+    section[aria-labelledby="titulo-carrito"] > ul + p {
         border-top-color: #e0a56a;
     }
 
@@ -415,5 +412,22 @@ body {
     .btn:focus-visible,
     select:focus-visible {
         outline-color: #e0a56a;
+    }
+}
+
+// El seguimiento va dentro de "Confirmar pedido": se dibuja como un bloque
+// simple y no como una tarjeta dentro de otra tarjeta
+section[aria-labelledby="titulo-seguimiento"] {
+    background: none;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+    margin: 1rem 0 0;
+
+    > h2 {
+        font-size: 1.05rem;
+        border-bottom: 0;
+        padding-bottom: 0;
+        margin-bottom: 0.5rem;
     }
 }
