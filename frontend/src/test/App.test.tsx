@@ -1,4 +1,3 @@
-
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -132,5 +131,13 @@ describe("App", () => {
         expect(
             within(carrito).getByText("Precio unitario: $3500"),
         ).toBeInTheDocument();
+    });
+
+    it("obtiene los productos una sola vez para café y pastelería", async () => {
+        render(<App />);
+
+        await screen.findByRole("heading", { name: "Pastelería" });
+
+        expect(obtenerProductos).toHaveBeenCalledTimes(1);
     });
 });

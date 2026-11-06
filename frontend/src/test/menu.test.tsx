@@ -1,19 +1,51 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { obtenerProductos } from "../api/productos.api";
+import { CarritoProvider } from "../carrito/CarritoContext";
 import { Menu } from "../menu/Menu";
 
 vi.mock("../api/productos.api", () => ({
     obtenerProductos: vi.fn(),
 }));
 
+const productos = [
+    {
+        id: 1,
+        nombre: "Expreso Pocillo",
+        precio: 5020,
+        tipo: "expreso" as const,
+        tamanio: "Pocillo",
+        gramosCafe: 18,
+        variedad: {
+            nombre: "Brasil",
+            precioPorGramo: 140,
+            descripcion: "Café brasileño",
+        },
+    },
+    {
+        id: 19,
+        nombre: "Muffin de chocolate",
+        precio: 3500,
+        tipo: "pasteleria" as const,
+    },
+];
+
+function renderMenu() {
+    return render(
+        <CarritoProvider>
+            <Menu />
+        </CarritoProvider>,
+    );
+}
+
 describe("Menu", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        vi.mocked(obtenerProductos).mockResolvedValue(productos);
     });
 
     it("muestra el encabezado del menú", () => {
-        render(<Menu />);
+        renderMenu();
 
         expect(
             screen.getByRole("heading", { name: "Menú" }),
@@ -21,18 +53,26 @@ describe("Menu", () => {
     });
 
     it("es una región accesible con el nombre Menú", () => {
-        render(<Menu />);
+        renderMenu();
 
         expect(
             screen.getByRole("region", { name: "Menú" }),
         ).toBeInTheDocument();
     });
 
-    it("no consulta la API ni muestra productos", () => {
-        render(<Menu />);
+    it("carga los productos y muestra los selectores de café y pastelería", async () => {
+        renderMenu();
 
-        expect(obtenerProductos).not.toHaveBeenCalled();
-        expect(screen.queryByText("Expreso")).not.toBeInTheDocument();
-        expect(screen.queryByText("Muffin")).not.toBeInTheDocument();
+        expect(
+            await screen.findByRole("heading", {
+                name: "Seleccioná tu café",
+            }),
+        ).toBeInTheDocument();
+
+        expect(
+            screen.getByRole("heading", { name: "Pastelería" }),
+        ).toBeInTheDocument();
+
+        expect(obtenerProductos).toHaveBeenCalledTimes(1);
     });
 });
