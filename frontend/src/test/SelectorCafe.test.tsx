@@ -1,4 +1,3 @@
-
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
@@ -135,17 +134,17 @@ describe("SelectorCafe", () => {
         expect(within(brasil).getByText(/acidez: baja/i)).toBeInTheDocument();
         expect(within(brasil).getByText(/cuerpo: intenso/i)).toBeInTheDocument();
         expect(within(brasil).getByText(/chocolate y nuez/i)).toBeInTheDocument();
-        expect(within(brasil).getByText("Precio: $5020")).toBeInTheDocument();
+        expect(within(brasil).getByText("Precio: $5.020")).toBeInTheDocument();
 
         expect(within(colombia).getByText(/acidez: media/i)).toBeInTheDocument();
         expect(within(colombia).getByText(/cuerpo: equilibrado/i)).toBeInTheDocument();
         expect(within(colombia).getByText(/caramelo y frutos rojos/i)).toBeInTheDocument();
-        expect(within(colombia).getByText("Precio: $5740")).toBeInTheDocument();
+        expect(within(colombia).getByText("Precio: $5.740")).toBeInTheDocument();
 
         expect(within(etiopia).getByText(/acidez: alta/i)).toBeInTheDocument();
         expect(within(etiopia).getByText(/cuerpo: ligero/i)).toBeInTheDocument();
         expect(within(etiopia).getByText(/flores y cítricos/i)).toBeInTheDocument();
-        expect(within(etiopia).getByText("Precio: $6100")).toBeInTheDocument();
+        expect(within(etiopia).getByText("Precio: $6.100")).toBeInTheDocument();
     });
 
     it("permite seleccionar un origen sin ocultar las otras tarjetas", async () => {
@@ -200,7 +199,9 @@ describe("SelectorCafe", () => {
         );
 
         expect(
-            await screen.findByText("Precio unitario: $5020"),
+            await screen.findByText((_, elemento) =>
+                elemento?.textContent === "Precio unitario: $5.020",
+            ),
         ).toBeInTheDocument();
 
         expect(screen.getByText("Cantidad: 1")).toBeInTheDocument();

@@ -51,7 +51,7 @@ describe("Carrito", () => {
 
         expect(screen.getByRole("heading", { name: "Muffin" })).toBeInTheDocument();
         expect(screen.getByText("Cantidad: 1")).toBeInTheDocument();
-        expect(screen.getByText("Precio unitario: $2500")).toBeInTheDocument();
+        expect(screen.getByText("Precio unitario: $2.500")).toBeInTheDocument();
         expect(screen.queryByText("Tu carrito está vacío")).not.toBeInTheDocument();
     });
 
@@ -88,13 +88,13 @@ describe("Carrito", () => {
     it("muestra el subtotal por producto y el subtotal general", async () => {
         const usuario = await cargarMuffin();
 
-        expect(screen.getByText("Subtotal: $2500")).toBeInTheDocument();
-        expect(screen.getByText("Subtotal general (orientativo): $2500")).toBeInTheDocument();
+        expect(screen.getByText("Subtotal: $2.500")).toBeInTheDocument();
+        expect(screen.getByText("Subtotal general (orientativo): $2.500")).toBeInTheDocument();
 
         await usuario.click(screen.getByRole("button", { name: "Sumar Muffin" }));
 
-        expect(screen.getByText("Subtotal: $5000")).toBeInTheDocument();
-        expect(screen.getByText("Subtotal general (orientativo): $5000")).toBeInTheDocument();
+        expect(screen.getByText("Subtotal: $5.000")).toBeInTheDocument();
+        expect(screen.getByText("Subtotal general (orientativo): $5.000")).toBeInTheDocument();
     });
 
     it("no muestra subtotal general cuando el carrito está vacío", () => {
