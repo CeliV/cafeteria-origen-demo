@@ -1,4 +1,6 @@
+
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { obtenerProductos } from "../api/productos.api";
 import { CarritoProvider } from "../carrito/CarritoContext";
@@ -74,5 +76,31 @@ describe("Menu", () => {
         ).toBeInTheDocument();
 
         expect(obtenerProductos).toHaveBeenCalledTimes(1);
+    });
+
+    it("permite reintentar la carga cuando ocurre un error", async () => {
+        const user = userEvent.setup();
+
+        vi.mocked(obtenerProductos)
+            .mockRejectedValueOnce(new Error("Error de conexión"))
+            .mockResolvedValueOnce(productos);
+
+        renderMenu();
+
+        expect(await screen.findByRole("alert")).toHaveTextContent(
+            "No se pudo cargar el menú.",
+        );
+
+        await user.click(
+            screen.getByRole("button", { name: "Reintentar" }),
+        );
+
+        expect(
+            await screen.findByRole("heading", {
+                name: "Seleccioná tu café",
+            }),
+        ).toBeInTheDocument();
+
+        expect(obtenerProductos).toHaveBeenCalledTimes(2);
     });
 });
