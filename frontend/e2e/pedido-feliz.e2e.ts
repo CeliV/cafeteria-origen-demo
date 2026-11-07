@@ -24,11 +24,11 @@ test("recorrido feliz: elegir, agregar, confirmar y ver el pedido", async ({ pag
 
     const carrito = page.getByRole("region", { name: "Carrito" });
     await expect(carrito.getByText("Cantidad: 1")).toBeVisible();
-    await expect(carrito.getByText("Subtotal: $7360")).toBeVisible();
+    await expect(carrito.getByText("Subtotal: $7.360")).toBeVisible();
 
     await page.getByRole("button", { name: "Confirmar pedido" }).click();
 
     await expect(page.getByText(/Pedido N°/)).toBeVisible();
     await expect(page.getByText(/Estado: pendiente/i).first()).toBeVisible();
-    await expect(page.getByText(/Total: \$7360/)).toBeVisible();
+    await expect(page.getByText(/Total: \$7\.360/)).toBeVisible();
 });
