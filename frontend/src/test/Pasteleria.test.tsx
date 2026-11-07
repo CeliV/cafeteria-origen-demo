@@ -1,15 +1,10 @@
 
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { obtenerProductos } from "../api/productos.api";
+import { describe, expect, it } from "vitest";
 import { Pasteleria } from "../pasteleria/Pasteleria";
 import { CarritoProvider } from "../carrito/CarritoContext";
 import { Carrito } from "../carrito/Carrito";
-
-vi.mock("../api/productos.api", () => ({
-    obtenerProductos: vi.fn(),
-}));
 
 const productos = [
     {
@@ -42,18 +37,13 @@ const productos = [
 function renderPasteleria() {
     return render(
         <CarritoProvider>
-            <Pasteleria />
+            <Pasteleria productos={productos} />
             <Carrito />
         </CarritoProvider>,
     );
 }
 
 describe("Pasteleria", () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-        vi.mocked(obtenerProductos).mockResolvedValue(productos);
-    });
-
     it("muestra los productos de pastelería", async () => {
         renderPasteleria();
 
@@ -81,8 +71,8 @@ describe("Pasteleria", () => {
 
         await screen.findByText("Muffin de chocolate");
 
-        expect(screen.getByText("Precio: $3500")).toBeInTheDocument();
-        expect(screen.getByText("Precio: $4200")).toBeInTheDocument();
+        expect(screen.getByText("Precio: $3.500")).toBeInTheDocument();
+        expect(screen.getByText("Precio: $4.200")).toBeInTheDocument();
     });
 
     it("agrega el producto seleccionado al carrito con su precio", async () => {
@@ -98,7 +88,7 @@ describe("Pasteleria", () => {
         );
 
         expect(
-            await screen.findByText("Precio unitario: $3500"),
+            await screen.findByText("Precio unitario: $3.500"),
         ).toBeInTheDocument();
 
         expect(screen.getByText("Cantidad: 1")).toBeInTheDocument();
@@ -117,7 +107,7 @@ describe("Pasteleria", () => {
         );
 
         expect(
-            await screen.findByText("Precio unitario: $4200"),
+            await screen.findByText("Precio unitario: $4.200"),
         ).toBeInTheDocument();
 
         expect(screen.getByText("Cantidad: 1")).toBeInTheDocument();

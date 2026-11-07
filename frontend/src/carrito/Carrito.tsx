@@ -1,5 +1,6 @@
 import { useCarrito } from "./CarritoContext";
 import { subtotalGeneral, subtotalItem } from "./subtotales";
+import { formatearPrecio } from "../utils/formatearPrecio";
 
 export function Carrito() {
     const { estado, dispatch } = useCarrito();
@@ -22,8 +23,8 @@ export function Carrito() {
                     <li key={item.productoId} aria-label={item.nombre}>
                         <h3>{item.nombre}</h3>
                         <p>Cantidad: {item.cantidad}</p>
-                        <p>Precio unitario: ${item.precioUnitario}</p>
-                        <p>Subtotal: ${subtotalItem(item)}</p>
+                        <p>Precio unitario: {formatearPrecio(item.precioUnitario)}</p>
+                        <p>Subtotal: {formatearPrecio(subtotalItem(item))}</p>
 
                         <div className="d-flex flex-wrap gap-2">
                             <button
@@ -64,7 +65,9 @@ export function Carrito() {
             </ul>
 
             <p>
-                <strong>Subtotal general (orientativo): ${subtotalGeneral(estado.items)}</strong>
+                <strong>
+                    Subtotal general (orientativo): {formatearPrecio(subtotalGeneral(estado.items))}
+                </strong>
             </p>
         </section>
     );

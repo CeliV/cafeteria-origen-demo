@@ -1,10 +1,8 @@
+
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import App from "../App";
 import { obtenerProductos } from "../api/productos.api";
-import { CarritoProvider } from "../carrito/CarritoContext";
-import { Pasteleria } from "../pasteleria/Pasteleria";
-import { SelectorCafe } from "../cafe/SelectorCafe";
 
 vi.mock("../api/productos.api", () => ({
     obtenerProductos: vi.fn(),
@@ -53,31 +51,13 @@ describe("accesibilidad", () => {
         ).toBeInTheDocument();
     });
 
-    it("el selector de café anuncia el error con role alert", async () => {
+    it("el menú anuncia el error de carga con role alert", async () => {
         apiCaida();
 
-        render(
-            <CarritoProvider>
-                <SelectorCafe />
-            </CarritoProvider>,
-        );
+        render(<App />);
 
         expect(await screen.findByRole("alert")).toHaveTextContent(
-            /no se pudieron cargar/i,
-        );
-    });
-
-    it("la pastelería anuncia el error con role alert", async () => {
-        apiCaida();
-
-        render(
-            <CarritoProvider>
-                <Pasteleria />
-            </CarritoProvider>,
-        );
-
-        expect(await screen.findByRole("alert")).toHaveTextContent(
-            /no se pudieron cargar/i,
+            /no se pudo cargar el menú/i,
         );
     });
 

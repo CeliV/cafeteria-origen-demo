@@ -5,8 +5,6 @@ import { CarritoProvider } from "./carrito/CarritoContext";
 import { Carrito } from "./carrito/Carrito";
 import { Menu } from "./menu/Menu";
 import { ConfirmarPedido } from "./pedidos/ConfirmarPedido";
-import { SelectorCafe } from "./cafe/SelectorCafe";
-import { Pasteleria } from "./pasteleria/Pasteleria";
 
 export default function App() {
     const mesa = leerMesa(window.location.search);
@@ -17,8 +15,6 @@ export default function App() {
                 <EncabezadoMesa mesa={mesa} />
 
                 <Menu />
-                <SelectorCafe />
-                <Pasteleria />
 
                 <Carrito />
                 <ConfirmarPedido mesa={mesa} />

@@ -49,10 +49,10 @@ describe("App", () => {
         expect(screen.getByText("Mesa 5")).toBeInTheDocument();
     });
 
-    it("muestra pedido sin mesa si la URL no la trae", () => {
+    it("indica que el pedido se retira en la barra si la URL no trae mesa", () => {
         render(<App />);
 
-        expect(screen.getByText("Pedido sin mesa")).toBeInTheDocument();
+        expect(screen.getByText("retirar en la barra")).toBeInTheDocument();
     });
 
     it("ofrece confirmar el pedido, deshabilitado mientras el carrito está vacío", () => {
@@ -77,7 +77,7 @@ describe("App", () => {
         ).not.toBeInTheDocument();
 
         expect(
-            within(menu).queryByText("$5020"),
+            within(menu).queryByText("$5.020"),
         ).not.toBeInTheDocument();
     });
 
@@ -91,7 +91,7 @@ describe("App", () => {
 
         // Seleccionamos un café.
         await user.click(
-            screen.getByRole("button", { name: /expreso/i }),
+            screen.getByRole("button", { name: /^expreso$/i }),
         );
 
         await user.selectOptions(
@@ -126,11 +126,19 @@ describe("App", () => {
         ).toBeInTheDocument();
 
         expect(
-            within(carrito).getByText("Precio unitario: $5020"),
+            within(carrito).getByText("Precio unitario: $5.020"),
         ).toBeInTheDocument();
 
         expect(
-            within(carrito).getByText("Precio unitario: $3500"),
+            within(carrito).getByText("Precio unitario: $3.500"),
         ).toBeInTheDocument();
+    });
+
+    it("obtiene los productos una sola vez para café y pastelería", async () => {
+        render(<App />);
+
+        await screen.findByRole("heading", { name: "Pastelería" });
+
+        expect(obtenerProductos).toHaveBeenCalledTimes(1);
     });
 });

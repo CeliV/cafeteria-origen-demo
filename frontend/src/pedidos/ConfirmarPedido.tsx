@@ -5,6 +5,7 @@ import type { Pedido } from "../api/pedidos.schema";
 import { useCarrito } from "../carrito/CarritoContext";
 import { armarPedido } from "./armarPedido";
 import { SeguimientoPedido } from "./SeguimientoPedido";
+import { formatearPrecio } from "../utils/formatearPrecio";
 
 type EstadoEnvio =
   | { tipo: "inactivo" }
@@ -50,7 +51,7 @@ export function ConfirmarPedido({ mesa }: { mesa: number | null }) {
         <div role="status">
           <p>Pedido N° {envio.pedido.id}</p>
           <p>Estado: {envio.pedido.estado}</p>
-          <p>Total: ${envio.pedido.total}</p>
+          <p>Total: {formatearPrecio(envio.pedido.total)}</p>
         </div>
       )}
 
